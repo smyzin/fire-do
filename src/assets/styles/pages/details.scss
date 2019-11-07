@@ -1,0 +1,209 @@
+.details{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 7px 13px;
+  width: 300px;
+  height: fit-content;
+
+  &_loading{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    width: 100%;
+    margin: 50px auto;
+  }
+
+  &__block{
+    display: flex;
+
+    align-items: center;
+    height: 25px;
+
+    overflow: hidden;
+    flex-grow: 1;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: pre;
+
+
+
+    &-id, &-name, &-update{
+      //overflow: hidden;
+      flex-shrink: 0;
+      width: 100%;
+      //text-overflow: ellipsis;
+      //white-space: pre;
+      & .details__value{
+        display: block;
+        overflow: hidden;
+        flex-grow: 1;
+        width: 0;
+        text-overflow: ellipsis;
+        white-space: pre;
+
+      }
+    }
+    & + .details__block{
+      margin-top: 5px;
+    }
+  }
+  //&__name, &__id, &__update, &__actions{
+  //  width: 100%;
+  //}
+
+  &__header{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    margin-bottom: 15px;
+
+    color: #676767;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #676767;
+
+    & button{
+      cursor: pointer;
+      outline: none;
+      color: rgba(103, 103, 103, .45);
+      padding: 7px 10px;
+      user-select: none;
+      background-color: transparent;
+      border: none;
+      border-radius: 4px;
+
+      font-size: 15px;
+      font-weight: 300;
+
+      transition: all .2s;
+      &:hover{
+        color: #676767;
+      }
+    }
+    & h1{
+      display: flex;
+      flex-grow: 1;
+      font-size: 21px;
+      font-weight: 400;
+      line-height: 26px;
+      margin-left: 10px;
+    }
+  }
+  &__label{
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 18px;
+    color: #575757;
+  }
+  &__value{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #676767;
+    margin-left: 3px;
+  }
+  &__id, &__name, &__update {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre;
+  }
+
+  &__actions{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 7px;
+    &-btn{
+      border-radius: 4px;
+      & + .item__actions-btn{
+        margin-left: 5px;
+      }
+    }
+    & button {
+      padding: 7px 10px;
+      font-size: 15px;
+      font-weight: 300;
+      margin-right: 5px;
+      outline: none;
+      user-select: none;
+      & + button{
+        margin-left: 5px;
+      }
+    }
+    &_edit{
+      cursor: pointer;
+      background-color: rgba(210, 156, 78, .35);
+      border: 1px solid #d29c4e;
+      transition: all .2s;
+      color: #ffffff;
+      &:hover{
+        border-radius: 4px;
+        background-color: #d29c4e;
+        color: #ffffff;
+        & .details__actions_edit-icon{
+          color: #ffffff;
+        }
+      }
+      &-icon{
+        width: 15px;
+        height: 15px;
+        color: #d29c4e;
+      }
+    }
+    &_save{
+      cursor: pointer;
+      background-color: rgba(95, 210, 118, .35);
+      border: 1px solid #5fd276;
+      transition: all .2s;
+      color: #ffffff;
+      &:hover{
+        border-radius: 4px;
+        background-color: #5fd276;
+        color: #ffffff;
+        & .details__actions_save-icon{
+          color: #ffffff;
+        }
+      }
+      &-icon{
+        width: 15px;
+        height: 15px;
+        color: #5fd276;
+      }
+    }
+    &_delete{
+      cursor: pointer;
+      background-color: rgba(210, 71, 100, .35);
+      border: 1px solid #d24764;
+      transition: all .2s;
+      color: #ffffff;
+      &:hover{
+        border-radius: 4px;
+        background-color: #d24764;
+        color: #ffffff;
+        & .details__actions_delete-icon{
+          color: #ffffff;
+        }
+      }
+      &-icon{
+        color: #d24764;
+      }
+    }
+    &_disabled{
+      cursor: no-drop;
+      background-color: rgba(180, 180, 180, 0.35);
+      border: 1px solid #b4b4b4;
+      transition: all .2s;
+      color: #a0a0a0;
+      & i{
+        color: #a0a0a0;
+      }
+    }
+  }
+
+}
