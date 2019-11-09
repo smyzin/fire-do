@@ -62,23 +62,25 @@
     }
   }
   &__actions{
+    display: flex;
+    flex-direction: row;
     margin-left: 7px;
     &-btn{
       border-radius: 4px;
+      outline: none;
+      user-select: none;
+      transition: all .2s;
+      padding: 5px 7px;
       & + .item__actions-btn{
         margin-left: 5px;
       }
     }
-    &-detail{
+    &_detail{
       display: flex;
       align-items: center;
       cursor: pointer;
       background-color: rgba(65, 135, 156, 0.35);
       border: 1px solid #41879c;
-      transition: all .2s;
-      padding: 5px 7px;
-      outline: none;
-      user-select: none;
       color: #ffffff;
       &:hover{
         border-radius: 4px;
@@ -89,8 +91,33 @@
         }
       }
       & i{
-        margin-right: 3px;
         color: #41879c;
+      }
+    }
+    &_delete{
+      cursor: pointer;
+      background-color: rgba(210, 71, 100, .35);
+      border: 1px solid #d24764;
+      color: #ffffff;
+      &:hover{
+        border-radius: 4px;
+        background-color: #d24764;
+        color: #ffffff;
+        & > i{
+          color: #ffffff;
+        }
+      }
+      & i{
+        color: #d24764;
+      }
+    }
+    &_disabled{
+      cursor: no-drop;
+      background-color: rgba(180, 180, 180, 0.35);
+      border: 1px solid #b4b4b4;
+      color: #a0a0a0;
+      & i{
+        color: #a0a0a0;
       }
     }
   }

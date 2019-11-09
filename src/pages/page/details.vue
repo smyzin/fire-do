@@ -22,11 +22,32 @@
                 @keyup.esc="resetInput"
                 @keyup.enter="new_name.length < 3 || new_name.length > 200 ? '' : updateTask({uid, name: new_name})"
             >
-            <span class="details__value" v-else>{{ task.name }}</span>
+            <span class="details__value" v-else>{{ $store.state.task.name }}</span>
+        </div>
+        <div class="details__block details__block-id">
+            <span class="details__label">Status: </span>
+            <div v-if="is_edit">
+                <input
+                    type="radio"
+                    id="contactChoice1"
+                    :value="true"
+                    v-model="is_done"
+                >
+                <label for="contactChoice1">Done</label>
+
+                <input
+                    type="radio"
+                    id="contactChoice2"
+                    :value="false"
+                    v-model="is_done"
+                >
+                <label for="contactChoice2">Open</label>
+            </div>
+            <span class="details__value" v-else>{{ $store.state.task.done ? 'Done' : 'Open' }}</span>
         </div>
         <div class="details__block details__block-id">
             <span class="details__label">Task's ID: </span>
-            <span class="details__value">{{ task.id }}</span>
+            <span class="details__value">{{ $store.state.task.id }}</span>
         </div>
         <div class="details__block details__block-update">
             <span class="details__label">Updated at: </span>
@@ -41,7 +62,7 @@
                     'details__actions_edit': !is_edit && !is_sending,
                     'details__actions_save': is_edit
                 }"
-                @click="!is_edit ? is_edit = !is_edit : (new_name.length < 3 || new_name.length > 200 ? is_edit = false : updateTask({uid, name: new_name}))"
+                @click="!is_edit ? is_edit = !is_edit : (new_name.length < 3 || new_name.length > 200 ? is_edit = false : updateSingleTask({uid, name: new_name, done: is_done}))"
                 :disabled="is_sending"
             >
                 <i
@@ -57,36 +78,27 @@
                 ></i>
                 {{ !is_edit ? (!is_sending ?'Edit' : 'Saving') : 'Save' }}
             </button>
-            <button
-                class="details__actions-btn"
-                :class="{
-                    'details__actions_disabled': is_sending,
-                    'details__actions_delete': !is_sending
-                }"
-                @click="removeTask(uid)"
-                :disabled="is_sending"
-            >
-                <i class="fa fa-trash details__actions_delete-icon"></i>
-                {{ !is_edit ? 'Delete' : 'Cancel' }}
-            </button>
         </div>
     </div>
 </template>
 
 <script>
+    import { mapActions } from 'vuex';
+
     export default {
         computed: {
             form_date(){
-                return this.$dateFormater(this.task.updatedAt);
+                return this.$dateFormater(this.$store.state.task.updatedAt);
             },
             sliced_name(){
-                return this.task.name.length > 50 ? `${this.task.name.slice(0, 50)}...` : this.task.name;
+                return this.$store.state.task.name.length > 50 ? `${this.$store.state.task.name.slice(0, 50)}...` : this.$store.state.task.name;
             }
         },
         watch: {
             is_edit(state){
                 if(state){
-                    this.new_name = this.task.name;
+                    this.new_name = this.$store.state.task.name;
+                    this.is_done = this.$store.state.task.done;
                     setTimeout(() => {
                         this.$refs.itemBlockInput.focus()
                     }, 10)
@@ -99,50 +111,38 @@
             return{
                 is_loading_data: true,
                 is_edit: false,
+                is_done: false,
                 is_sending: false,
                 new_name: '',
 
-                task: {},
                 uid: this.$route.params.id
             }
         },
         created(){
-            this.$db.collection('todo')
-                .doc(this.uid)
-                .get()
-                .then(doc => {
-                    this.task = doc.data();
-                    this.is_loading_data = false;
-                });
+            this.getSingleTask(this.uid).then(() => {
+                this.is_loading_data = false;
+            });
         },
         methods: {
+            ...mapActions({
+                getSingleTask: 'getSingleTask',
+                updateTask: 'updateTask'
+            }),
             resetInput(){
                 this.is_edit = false;
             },
-            updateTask({uid, name}){
-                if(name !== this.task.name){
-                    const date = new Date();
+            updateSingleTask({uid, name, done}){
+                if(name !== this.$store.state.task.name){
                     this.is_sending = true;
 
-                    this.$db.collection('todo').doc(uid).update({updatedAt: date, name: name}).then(() => {
-                        this.task.updatedAt = date;
-                        this.task.name =  name;
+                    this.updateTask({uid, name, updatedAt: new Date(), done}).then(() => {
                         this.is_sending = false;
+                        this.resetInput();
                     });
+                }else{
+                    this.resetInput();
                 }
-                this.resetInput();
-            },
-
-            removeTask(uid){
-                this.is_sending = true;
-                let date = new Date()
-                this.$db.collection('todo').doc(uid).update({updatedAt: date, deletedAt: date}).then(res => {
-                    this.$db.collection('todo').doc(uid).delete().then(() => {
-                        this.$router.push(`/?page=${this.$store.state.current_page}`);
-                        this.is_sending = false;
-                    });
-                });
-            },
+            }
         }
     }
 </script>

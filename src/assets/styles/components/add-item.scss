@@ -69,5 +69,21 @@
       transition: all .2s;
 
     }
+    &_disabled{
+      cursor: no-drop;
+      background-color: rgba(180, 180, 180, 0.35);
+      border: 1px solid #b4b4b4;
+      transition: all .2s;
+      color: #a0a0a0;
+      & i{
+        color: #a0a0a0;
+      }
+      &:hover{
+        background-color: rgba(180, 180, 180, 0.35);
+        & .add-block__btn-icon{
+          color: #a0a0a0;
+        }
+      }
+    }
   }
 }

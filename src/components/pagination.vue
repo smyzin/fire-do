@@ -1,9 +1,13 @@
 <template>
     <div class="pagination">
         <button
-            class="pagination__btn" :class="current_page === num ? 'pagination__btn_active' : ''" v-for="num in pages" :key="num"
+            class="pagination__btn"
+            :class="{
+                'pagination__btn_active': current_page === num || $store.state.is_disabled
+
+            }" v-for="num in pages" :key="num"
             @click="paginatePage(num)"
-            :disabled="current_page === num"
+            :disabled="current_page === num || $store.state.is_disabled"
         >
             <span>
                 {{ num }}
@@ -30,7 +34,6 @@
         },
         methods: {
             paginatePage(num){
-                // if(num > )
                 this.$emit('changePage', num)
             }
         }

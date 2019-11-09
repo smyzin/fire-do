@@ -4,7 +4,7 @@
             ref="addBlockInput"
             v-if="is_opened"
             class="add-block__input"
-            :disabled="is_sending"
+            :disabled="$store.state.is_disabled"
             v-model="name" type="text"
             :max="200"
             :maxlength="200"
@@ -14,16 +14,20 @@
         >
 
         <button
-            :class="is_opened ? 'add-block__btn_small' : 'add-block__btn_huge'"
+            :class="{
+                'add-block__btn_disabled': $store.state.is_disabled,
+                'add-block__btn_small': is_opened,
+                'add-block__btn_huge': !is_opened
+            }"
             class="add-block__btn"
-            :disabled="is_sending"
+            :disabled="$store.state.is_disabled"
             @click="is_opened ? (name.length < 3 || name.length > 200 ? resetForm() : createNewTask()) : is_opened = !is_opened"
 
         >
             <i class="fa add-block__btn-icon"
                :class="{
-                'fa-spinner fa-pulse fa-3x fa-fw': is_sending,
-                'fa-plus': !is_sending,
+                'fa-spinner fa-pulse fa-3x fa-fw': $store.state.is_disabled && is_sending,
+                'fa-plus': !$store.state.is_disabled,
                 'add-block__btn-icon_rotate': is_opened? name.length < 3 || name.length > 200 : false
                }" ref="addBtnIcon"></i>
 
@@ -33,6 +37,8 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
+
     export default {
         watch: {
             is_opened(state){
@@ -51,18 +57,19 @@
             }
         },
         methods: {
+            ...mapActions({
+                updateDisabledStatus: 'updateDisabledStatus'
+            }),
             resetForm(){
                 this.name = '';
                 this.is_opened = false;
                 this.is_sending = false;
+                this.is_sending = false;
+                this.updateDisabledStatus(false);
             },
             createNewTask(){
-                this.changeLoadingState(true);
-
+                this.is_sending = true;
                 this.$emit('createTask', this.name);
-            },
-            changeLoadingState(state){
-                this.is_sending = state;
             }
         }
     }
